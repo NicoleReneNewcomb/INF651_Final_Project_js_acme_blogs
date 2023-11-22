@@ -34,6 +34,39 @@ function createSelectOptions(usersJSON) {
     return userArray;
 };
 
+function toggleCommentSection(postID) {
+    if (!postID || typeof(postID) === undefined) {
+        return undefined;
+    }
+
+    const sectionElement = document.querySelector(`[data-post-id="${postID}"]`);
+
+    if (!sectionElement || typeof(sectionElement) === undefined) {
+        return null;
+    }
+
+    sectionElement.classList.toggle("hide");
+    return sectionElement;
+};
+
+function toggleCommentButton(postID) {
+    if (!postID || typeof(postID) === undefined) {
+        return undefined;
+    }
+
+    const buttonElement = document.querySelector(`button[data-post-id="${postID}"]`);
+    
+    if (!buttonElement || typeof(buttonElement) == undefined) {
+        return null;
+    }
+
+    buttonElement.textContent === "Show Comments"
+    ? buttonElement.textContent = "Hide Comments"
+    : buttonElement.textContent = "Show Comments";
+
+    return buttonElement;
+};
+
 
 
 // async function jsonData() {
