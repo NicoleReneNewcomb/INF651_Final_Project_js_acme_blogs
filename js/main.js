@@ -67,6 +67,39 @@ function toggleCommentButton(postID) {
     return buttonElement;
 };
 
+function deleteChildElements(parentElement) {
+    if (!parentElement?.tagName) {
+        return undefined;
+    }
+    
+    var child = parentElement.lastElementChild;
+
+    while (child) {
+        parentElement.removeChild(child);
+        child = parentElement.lastElementChild;
+    }
+
+    return parentElement;
+};
+
+function addButtonListeners() {
+    const buttons = document.querySelectorAll("main button");
+    
+    if (buttons) {
+        buttons.forEach(button => {
+            const postID = button.dataset.postId;
+
+            if (postID) {
+                button.addEventListener("click", (event) => {
+                    toggleComments(event, postID);
+                });
+            }
+        })
+    }
+
+    return buttons;
+};
+
 
 
 // async function jsonData() {
