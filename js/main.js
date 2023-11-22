@@ -154,6 +154,82 @@ function populateSelectMenu(usersJSON) {
     return selectMenu;
 };
 
+async function getUsers() {
+    try {
+        const users = await fetch("https://jsonplaceholder.typicode.com/users");    
+        
+        if (!users.ok) {
+            throw new Error("API fetch failed.")
+        }
+        else {
+            return users.json();
+        }
+    }   
+    catch (err) {
+        console.error(err);
+    }
+};
+
+async function getUserPosts(userID) {
+    if (!userID) {
+        return undefined;
+    }
+
+    try {
+        const userPosts = await fetch(`https://jsonplaceholder.typicode.com/users/${userID}/posts`);    
+        
+        if (!userPosts.ok) {
+            throw new Error("API fetch failed.")
+        }
+        else {
+            return userPosts.json();
+        }
+    }   
+    catch (err) {
+        console.error(err);
+    }
+};
+
+async function getUser(userID) {
+    if (!userID) {
+        return undefined;
+    }
+
+    try {
+        const user = await fetch(`https://jsonplaceholder.typicode.com/users/${userID}`);    
+        
+        if (!user.ok) {
+            throw new Error("API fetch failed.")
+        }
+        else {
+            return user.json();
+        }
+    }   
+    catch (err) {
+        console.error(err);
+    }
+};
+
+async function getPostComments(postID) {
+    if (!postID) {
+        return undefined;
+    }
+
+    try {
+        const postComments = await fetch(`https://jsonplaceholder.typicode.com/posts/${postID}/comments`);    
+        
+        if (!postComments.ok) {
+            throw new Error("API fetch failed.")
+        }
+        else {
+            return postComments.json();
+        }
+    }   
+    catch (err) {
+        console.error(err);
+    }
+};
+
 
 
 // async function jsonData() {
