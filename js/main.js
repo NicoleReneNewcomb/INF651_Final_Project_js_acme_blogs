@@ -230,7 +230,64 @@ async function getPostComments(postID) {
     }
 };
 
+async function displayComments(postID) {
+    if (!postID) {
+        return undefined;
+    }
 
+    const section = document.createElement("section");
+    section.dataset.postId = postID;
+    section.classList.add("comments");
+    section.classList.add("hide");
+
+    const comments = await getPostComments(postID);
+    const fragment = createComments(comments);
+    section.appendChild(fragment);
+    
+    return section;
+};
+
+async function createPosts(postsJSON) {
+    if (!postsJSON) {
+        return undefined;
+    }
+
+    const fragment = document.createDocumentFragment();
+
+    for (const post of postsJSON) {
+        const article = document.createElement("article");
+        const h2 = createElemWithText('h2', post.title);
+        const p1 = createElemWithText('p', post.body);
+        const p2 = createElemWithText('p', `Post ID: ${post.id}`);
+        
+        const author = await getUser(post.userId);
+        const p3 = createElemWithText('p', `Author: ${author.name} with ${author.company.name}`);
+        const p4 = createElemWithText('p', `${author.company.catchPhrase}`);
+        const button = createElemWithText('button', 'Show Comments');
+        
+        button.dataset.postId = post.id;
+        article.appendChild(h2);
+        article.appendChild(p1);
+        article.appendChild(p2);
+        article.appendChild(p3);
+        article.appendChild(p4);
+        article.appendChild(button);
+        
+        const section1 = await displayComments(post.id);
+        article.appendChild(section1);
+        fragment.appendChild(article);
+        // console.log(fragment);
+    }
+    console.log(fragment);
+    return fragment;
+};
+
+
+function toggleComments(event, postID) {
+    if (!event || !postID) {
+        return undefined;
+    }
+};
 
 // async function jsonData() {
 //     const data = await fetch("https://jsonplaceholder.typicode.com/users");
@@ -239,8 +296,8 @@ async function getPostComments(postID) {
 // }
 
 // async function order() {
-//     const sampleUserJSON = await jsonData();
-//     await createSelectOptions(sampleUserJSON);
+//     const sampleUserJSON = await getUserPosts(2);
+//     createPosts(sampleUserJSON);
 // }
 
 // order();
