@@ -100,6 +100,60 @@ function addButtonListeners() {
     return buttons;
 };
 
+function removeButtonListeners() {
+    const buttons = document.querySelectorAll("main button");
+
+    if (buttons) {
+        buttons.forEach(button => {
+            const postID = button.dataset.postId;
+
+            if (postID) {
+                button.removeEventListener("click", (event) => {
+                    toggleComments(event, postID);
+                });
+            }
+        })
+    }
+
+    return buttons;
+};
+
+function createComments(commentsJSON) {
+    if (!commentsJSON) {
+        return undefined;
+    }
+
+    const fragment = document.createDocumentFragment();
+
+    commentsJSON.forEach(comment => {
+        const article = document.createElement("article");
+        const h3 = createElemWithText('h3', comment.name);
+        const p1 = createElemWithText('p', comment.body);
+        const p2 = createElemWithText('p', `From: ${comment.email}`);
+        article.appendChild(h3);
+        article.appendChild(p1);
+        article.appendChild(p2);
+        fragment.appendChild(article);
+    })
+
+    return fragment;
+};
+
+function populateSelectMenu(usersJSON) {
+    if (!usersJSON) {
+        return undefined;
+    }
+
+    const selectMenu = document.getElementById("selectMenu");
+    const usersArray = createSelectOptions(usersJSON);
+
+    usersArray.forEach(user => {
+        selectMenu.append(user);
+    })
+
+    return selectMenu;
+};
+
 
 
 // async function jsonData() {
@@ -114,5 +168,3 @@ function addButtonListeners() {
 // }
 
 // order();
-
-addButtonListeners();
