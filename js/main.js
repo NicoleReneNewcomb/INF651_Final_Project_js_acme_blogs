@@ -39,7 +39,7 @@ function toggleCommentSection(postID) {
         return undefined;
     }
 
-    const sectionElement = document.querySelector(`[data-post-id="${postID}"]`);
+    const sectionElement = document.querySelector(`section[data-post-id="${postID}"]`);
 
     if (!sectionElement || typeof(sectionElement) === undefined) {
         return null;
@@ -90,9 +90,8 @@ function addButtonListeners() {
             const postID = button.dataset.postId;
 
             if (postID) {
-                button.addEventListener("click", (event) => {
-                    toggleComments(event, postID);
-                });
+                button.addEventListener("click", function (e) {
+                    toggleComments(e, postID)});
             }
         })
     }
@@ -108,9 +107,8 @@ function removeButtonListeners() {
             const postID = button.dataset.postId;
 
             if (postID) {
-                button.removeEventListener("click", (event) => {
-                    toggleComments(event, postID);
-                });
+                button.removeEventListener("click", function (e) {
+                    toggleComments(e, postID)});
             }
         })
     }
@@ -293,27 +291,75 @@ async function displayPosts(posts) {
     return element;
 };
 
-function toggleComments(event, postID) {
-    if (!event || !postID) {
+function toggleComments(e, postID) {
+    if (!e || !postID) {
         return undefined;
     }
 
-    event.target.listener=true;
+    e.target.listener=true;
     const section = toggleCommentSection(postID);
     const button = toggleCommentButton(postID);
 
     return [section, button];
 };
 
+async function refreshPosts(postsJSON) {
+    if (!postsJSON) {
+        return undefined;
+    }
+
+    const removeButtons = removeButtonListeners();
+    const main = document.querySelector("main");
+    deleteChildElements(main);
+
+    const fragment = await displayPosts(postsJSON);
+    const addButtons = addButtonListeners();
+
+    return [removeButtons, main, fragment, addButtons];
+};
+
+async function selectMenuChangeEventHandler(e) {
+    
+    if (!e) {
+        return undefined;
+    }
+
+    const selectMenu = document.getElementById("selectMenu");
+    selectMenu.disabled = true;
+
+    const userId = e?.target?.value || 1;
+    const posts = await getUserPosts(userId);
+    const refreshPostsArray = await refreshPosts(posts);
+    selectMenu.disabled = false;
+
+    return [userId, posts, refreshPostsArray];
+};
+
+async function initPage() {
+    const users = await getUsers();
+    const select = populateSelectMenu(users);
+    
+    return [users, select];
+};
+
+async function initApp() {
+    await initPage();
+
+    const selectMenu = document.getElementById("selectMenu");
+    selectMenu.addEventListener("change", selectMenuChangeEventHandler);
+};
+
+document.addEventListener("DOMContentLoaded", initApp);
+
 // async function jsonData() {
 //     const data = await fetch("https://jsonplaceholder.typicode.com/users");
 //     const json = await data.json();
 //     return json;
-// }
+// };
 
 // async function order() {
-//     const samplePostJSON = await getUserPosts(2);
-//     await displayPosts();
-// }
+//     // const samplePostJSON = await getUserPosts(2);
+//     initApp();
+// };
 
 // order();
