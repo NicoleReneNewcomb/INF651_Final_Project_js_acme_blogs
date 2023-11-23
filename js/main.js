@@ -276,17 +276,33 @@ async function createPosts(postsJSON) {
         const section1 = await displayComments(post.id);
         article.appendChild(section1);
         fragment.appendChild(article);
-        // console.log(fragment);
     }
-    console.log(fragment);
+
     return fragment;
 };
 
+async function displayPosts(posts) {
+    const main = document.querySelector("main");
+
+    const element = posts 
+    ? await createPosts(posts)
+    : createElemWithText("p", "Select an Employee to display their posts.", "default-text");
+
+    main.append(element);
+
+    return element;
+};
 
 function toggleComments(event, postID) {
     if (!event || !postID) {
         return undefined;
     }
+
+    event.target.listener=true;
+    const section = toggleCommentSection(postID);
+    const button = toggleCommentButton(postID);
+
+    return [section, button];
 };
 
 // async function jsonData() {
@@ -296,8 +312,8 @@ function toggleComments(event, postID) {
 // }
 
 // async function order() {
-//     const sampleUserJSON = await getUserPosts(2);
-//     createPosts(sampleUserJSON);
+//     const samplePostJSON = await getUserPosts(2);
+//     await displayPosts();
 // }
 
 // order();
